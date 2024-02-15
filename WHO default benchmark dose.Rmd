@@ -1,0 +1,501 @@
+---
+title: "Benchmark dose"
+author: "En-Hsuan Lu"
+date: "2023-07-17"
+output: html_document
+---
+
+##set seed
+
+```{r read}
+set.seed(1234)
+```
+
+##2,4,5-Trichlorophenol
+
+```{r 2,4,5-trichlorophenol}
+#NOEL: 100 mg/kg/day
+#Liver and kidney pathology
+AF_pod_noael_deter <- rlnorm(10000,meanlog = log(2/9), sdlog=log(5^(1/1.645)))
+
+bmd.245tcp <- 100/AF_pod_noael_deter
+cat("bmd.245tcp",quantile(bmd.245tcp,prob=c(0.5,0.05,0.95)),"\n")
+
+AF_pod_dur_sub <- rlnorm(10000,meanlog = log(2), sdlog=log(4^(1/1.645)))
+
+#AF: WHO body size scaling
+#human: 70 kg
+#Sprague-Dawley rat, subchronic
+#M: 0.18 kg; F: 0.124 kg
+#average: 0.152 kg
+#P50 = (70/0.152)^0.3 = 6.294719
+#P95/P50 = (70/0.152)^0.04 = 1.277998
+AF_interBS_sub.sdrat <- rlnorm(10000,meanlog = log(6.30), sdlog=log(1.28^(1/1.645)))
+
+hed.245tcp <- 100/(AF_pod_noael_deter*AF_pod_dur_sub*AF_interBS_sub.sdrat)
+cat("hed.245tcp",quantile(hed.245tcp,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##4,6-Dinitro-o-cresol
+POD based on human
+
+```{r 4,6-dinitro-o-cresol}
+#LOAEL: 0.8 mg/kg/day
+#AF LOAEL to NOAEL: 10
+#Reduced body weight, excessive sweating, fatigue, decreased appetite, elevated BMR, and greenish-yellow coloration of the conjunctivae
+AF_loael_noael <- rlnorm(10000, meanlog = log(10), sdlog = log(3)^(1/1.645))
+AF_pod_noael_cont <- rlnorm(10000,meanlog = log(1/3), sdlog=log(4.7^(1/1.645)))
+AF_pod_noael_deter <- rlnorm(10000,meanlog = log(2/9), sdlog=log(5^(1/1.645)))
+
+AF_pod_dur_sub <- rlnorm(10000,meanlog = log(2), sdlog=log(4^(1/1.645)))
+
+bmd.dnoc.cont <- 0.8/(AF_loael_noael*AF_pod_noael_cont)
+cat("bmd.dnoc.cont",quantile(bmd.dnoc.cont,prob=c(0.5,0.05,0.95)),"\n")
+bmd.dnoc.deter <- 0.8/(AF_loael_noael*AF_pod_noael_deter)
+cat("bmd.dnoc.deter",quantile(bmd.dnoc.deter,prob=c(0.5,0.05,0.95)),"\n")
+
+#human
+hed.dnoc.cont <- 0.8/(AF_loael_noael*AF_pod_dur_sub*AF_pod_noael_cont)
+cat("hed.dnoc.cont",quantile(hed.dnoc.cont,prob=c(0.5,0.05,0.95)),"\n")
+hed.dnoc.deter <- 0.8/(AF_loael_noael*AF_pod_dur_sub*AF_pod_noael_deter)
+cat("hed.dnoc.deter",quantile(hed.dnoc.deter,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##ALDRIN
+```{r aldrin}
+#LOAEL: 0.025
+#LOAEL to NOAEL: 10
+AF_loael_noael <- rlnorm(10000, meanlog = log(10), sdlog = log(3)^(1/1.645))
+AF_pod_noael_deter <- rlnorm(10000,meanlog = log(2/9), sdlog=log(5^(1/1.645)))
+
+bmd.aldrin <- 0.025/(AF_loael_noael*AF_pod_noael_deter)
+cat("bmd.aldrin",quantile(bmd.aldrin,prob=c(0.5,0.05,0.95)),"\n")
+
+#AF: use WHO body size scaling
+#human: 70 kg
+#Rat (Osborne-Mendel strain): Male 0.514 kg; Female 0.389 kg
+#Average bw: 0.4515 kg
+#P50 = (70/0.4515)^0.3 = 4.541
+#P95/P50 = (70/0.4515)^0.04 = 1.224
+AF_interBS_omrat <- rlnorm(10000,meanlog = log(4.541), sdlog=log(1.224^(1/1.645)))
+
+hed.aldrin <- 0.025/(AF_loael_noael*AF_pod_noael_deter*AF_interBS_omrat)
+cat("hed.aldrin",quantile(hed.aldrin,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##AZINPHOS-METHYL
+male
+```{r azinphos-methyl}
+#BMD: 0.48 mg/kg/day
+#BMDL:0.3 mg/kg/day
+#P50=BMD=0.48
+#P95/P50=BMD/BMDL=0.48/0.3=1.6
+bmd.azin <- rlnorm(10000,meanlog = log(0.48), sdlog=log(1.6)^(1/1.645))
+cat("bmd.azin",quantile(bmd.azin,prob=c(0.5,0.05,0.95)),"\n")
+
+#AF: WHO body size scaling
+#human: 70 kg
+#beagle dog: male 10.8 kg
+#P50 = (70/10.8)^0.3 = 1.751872
+#P95/P50 = (70/10.8)^0.04 = 1.077623
+AF_interBS_dog.m <- rlnorm(10000,meanlog = log(1.75), sdlog=log(1.08^(1/1.645)))
+
+hed.azin <- bmd.azin/AF_interBS_dog.m
+cat("hed.azin",quantile(hed.azin,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##CHLORPYRIFOS
+
+```{r chlorpyrifos}
+#NOAEL: 0.1
+AF_pod_noael_deter <- rlnorm(10000,meanlog = log(2/9), sdlog=log(5^(1/1.645)))
+
+bmd.chlo <- 0.1/AF_pod_noael_deter
+cat("bmd.chlo",quantile(bmd.chlo,prob=c(0.5,0.05,0.95)),"\n")
+
+#AF: WHO body size scaling
+#human: 70 kg
+#Sherman-strain rat: use Fischer 344 rat, male 0.38 kg, female 0.229 kg
+#average bw: 0.3045
+#P50 = (70/0.3045)^0.3 = 5.11038
+#P95/P50 = (70/0.3045)^0.04 = 1.242969
+AF_interBS_fischerrat <- rlnorm(10000,meanlog = log(5.11), sdlog=log(1.24^(1/1.645)))
+
+hed.chlo <- 0.1/(AF_pod_noael_deter*AF_interBS_fischerrat)
+cat("hed.chlo",quantile(hed.chlo,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##DIAZINON
+
+```{r diazinon}
+#NOAEL: 0.065 mg/kg/day
+AF_pod_noael_cont <- rlnorm(10000,meanlog = log(1/3), sdlog=log(4.7^(1/1.63)))
+
+bmd.diaz <- 0.065/AF_pod_noael_cont
+cat("bmd.diaz",quantile(bmd.diaz,prob=c(0.5,0.05,0.95)),"\n")
+
+#AF: WHO body size scaling
+#human: 70 kg
+#Sprague-Dawley rat
+#M: 0.523 kg; F: 0.338 kg
+#average: 0.4305 kg
+#P50 = (70/0.4305)^0.3 = 4.606144
+#P95/P50 = (70/0.4305)^0.04 = 1.226
+AF_interBS_sdrat <- rlnorm(10000,meanlog = log(4.61), sdlog=log(1.226^(1/1.645)))
+
+hed.diaz <- 0.065/(AF_pod_noael_cont*AF_interBS_sdrat)
+cat("hed.diaz",quantile(hed.diaz,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##Dibutyl Phthalate
+
+```{r DBP}
+#NOAEL: 125 mg/kg/day
+AF_pod_noael_deter <- rlnorm(10000,meanlog = log(2/9), sdlog=log(5^(1/1.645)))
+
+bmd.dbp <- 125/AF_pod_noael_deter
+cat("bmd.dbp",quantile(bmd.dbp,prob=c(0.5,0.05,0.95)),"\n")
+
+AF_pod_dur_sub <- rlnorm(10000,meanlog = log(2), sdlog=log(4^(1/1.645)))
+
+#AF: WHO body size scaling
+#human: 70 kg
+#subchronic Male SD rat: 0.267 kg
+#P50 = (70/0.267)^0.3 = 5.315891
+#P95/P50 = (70/0.267)^0.04 = 1.249521
+AF_interBS_sub.sdrat.m <- rlnorm(10000,meanlog = log(5.32), sdlog=log(1.25^(1/1.645)))
+
+hed.dbp <- 125/(AF_pod_noael_deter*AF_pod_dur_sub*AF_interBS_sub.sdrat.m)
+cat("hed.dbp",quantile(hed.dbp,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##DICOFOL
+
+```{r dicofol}
+#NOAEL: 0.12
+AF_pod_noael_deter <- rlnorm(10000,meanlog = log(2/9), sdlog=log(5^(1/1.645)))
+
+bmd.dicofol <- 0.12/AF_pod_noael_deter
+cat("bmd.dicofol",quantile(bmd.dicofol,prob=c(0.5,0.05,0.95)),"\n")
+
+#AF: WHO body size scaling
+#human: 70 kg
+#beagle dog: male 10.8 kg, female 10.1 kg
+#average bw: 10.45
+#P50 = (70/10.45)^0.3 = 1.769272
+#P95/P50 = (70/10.45)^0.04 = 1.079044
+AF_interBS_dog <- rlnorm(10000,meanlog = log(1.77), sdlog=log(1.08^(1/1.645)))
+
+hed.dicofol <- 0.12/(AF_pod_noael_deter*AF_interBS_dog)
+cat("hed.dicofol",quantile(hed.dicofol,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##DIELDRIN
+
+```{r dieldrin}
+#NOAEL: 0.005
+AF_pod_noael_cont <- rlnorm(10000,meanlog = log(1/3), sdlog=log(4.7^(1/1.63)))
+
+bmd.diel <- 0.005/AF_pod_noael_cont
+cat("bmd.diel",quantile(bmd.diel,prob=c(0.5,0.05,0.95)),"\n")
+
+#AF: WHO body size scaling
+#human: 70 kg
+#rat: use Fischer 344 rat, male 0.38 kg; female 0.229 kg
+#average animal bw: 0.3045 kg
+#P50 = (70/0.3045)^0.3 = 5.11
+#P95/P50 = (70/0.3045)^0.04 = 1.243
+AF_interBS_fischerrat <- rlnorm(10000,meanlog = log(5.11), sdlog=log(1.243^(1/1.645)))
+
+hed.diel <- 0.005/(AF_pod_noael_cont*AF_interBS_fischerrat)
+cat("hed.diel",quantile(hed.diel,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##Disulfoton
+
+```{r disulfoton}
+#LEL: 0.04 mg/kg/day
+#ChE inhibition, optic nerve degeneration
+#both
+#AF LOAEL to NOAEL: 10
+AF_loael_noael <- rlnorm(10000, meanlog = log(10), sdlog = log(3)^(1/1.645))
+AF_pod_noael_cont <- rlnorm(10000,meanlog = log(1/3), sdlog=log(4.7^(1/1.645)))
+AF_pod_noael_deter <- rlnorm(10000,meanlog = log(2/9), sdlog=log(5^(1/1.645)))
+
+bmd.disul.cont <- 0.04/(AF_loael_noael*AF_pod_noael_cont)
+cat("bmd.disul.cont",quantile(bmd.disul.cont,prob=c(0.5,0.05,0.95)),"\n")
+bmd.disul.deter <- 0.04/(AF_loael_noael*AF_pod_noael_cont)
+cat("bmd.disul.deter",quantile(bmd.disul.deter,prob=c(0.5,0.05,0.95)),"\n")
+
+#AF: WHO body size scaling
+#human: 70 kg
+#rat: use Fischer 344 rat, male 0.38 kg; female 0.229 kg
+#average animal bw: 0.3045 kg
+#P50 = (70/0.3045)^0.3 = 5.11
+#P95/P50 = (70/0.3045)^0.04 = 1.243
+AF_interBS_fischerrat <- rlnorm(10000,meanlog = log(5.11), sdlog=log(1.243^(1/1.645)))
+
+hed.disul.cont <- 0.04/(AF_loael_noael*AF_pod_noael_cont*AF_interBS_fischerrat)
+cat("hed.disul.cont",quantile(hed.disul.cont,prob=c(0.5,0.05,0.95)),"\n")
+hed.disul.deter <- 0.04/(AF_loael_noael*AF_pod_noael_deter*AF_interBS_fischerrat)
+cat("hed.disul.deter",quantile(hed.disul.deter,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##Endosulfan
+
+```{r endosulfan}
+#NOAEL: 0.6
+AF_pod_noael_cont <- rlnorm(10000,meanlog = log(1/3), sdlog=log(4.7^(1/1.645)))
+AF_pod_noael_deter <- rlnorm(10000,meanlog = log(2/9), sdlog=log(5^(1/1.645)))
+
+bmd.endo.cont <- 0.6/AF_pod_noael_cont
+cat("bmd.endo.cont",quantile(bmd.endo.cont,prob=c(0.5,0.05,0.95)),"\n")
+bmd.endo.deter <- 0.6/AF_pod_noael_cont
+cat("bmd.endo.deter",quantile(bmd.endo.deter,prob=c(0.5,0.05,0.95)),"\n")
+
+#AF: WHO body size scaling
+#human: 70 kg
+#Sprague-Dawley rat: M: 0.523 kg, F: 0.338 kg
+#average bw: 0.4305
+#P50 = (70/0.4305)^0.3 = 4.606144
+#P95/P50 = (70/0.4305)^0.04 = 1.225872
+AF_interBS_sdrat <- rlnorm(10000,meanlog = log(4.61), sdlog=log(1.23^(1/1.645)))
+
+hed.endo.cont <- 0.6/(AF_pod_noael_cont*AF_interBS_sdrat)
+cat("hed.endo.cont",quantile(hed.endo.cont,prob=c(0.5,0.05,0.95)),"\n")
+hed.endo.deter <- 0.6/(AF_pod_noael_cont*AF_interBS_sdrat)
+cat("hed.endo.deter",quantile(hed.endo.deter,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##Endrin
+
+```{r endrin}
+#NOEL: 0.025 mg/kg/day
+#Mild histological lesions in liver, occasional convulsions
+AF_pod_noael_deter <- rlnorm(10000,meanlog = log(2/9), sdlog=log(5^(1/1.645)))
+
+bmd.endrin <- 0.025/AF_pod_noael_deter
+cat("bmd.endrin",quantile(bmd.endrin,prob=c(0.5,0.05,0.95)),"\n")
+
+#AF: WHO body size scaling
+#human: 70 kg
+#dog: use beagle dog, male 10.8 kg; female 10.1 kg 
+#average animal bw: 10.45 kg
+#P50 = (70/10.45)^0.3 = 1.769
+#P95/P50 = (70/10.45)^0.04 = 1.079
+AF_interBS_dog <- rlnorm(10000,meanlog = log(1.769), sdlog=log(1.079^(1/1.645)))
+
+hed.endrin <- 0.025/(AF_pod_noael_deter*AF_interBS_dog)
+cat("hed.endrin",quantile(hed.endrin,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##Ethion
+POD based on human
+
+```{r ethion}
+#NOEL: 0.05 mg/kg/day
+AF_pod_noael_cont <- rlnorm(10000,meanlog = log(1/3), sdlog=log(4.7^(1/1.63)))
+
+bmd.ethion <- 0.05/AF_pod_noael_cont
+cat("bmd.ethion",quantile(bmd.ethion,prob=c(0.5,0.05,0.95)),"\n")
+
+#human
+hed.ethion <- 0.05/AF_pod_noael_cont
+cat("hed.ethion",quantile(hed.ethion,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##Heptachlor
+female
+```{r heptachlor}
+#LOAEL: 0.03
+#AF LOAEL to NOAEL: 3
+AF_loael_noael_3 <- rlnorm(10000, meanlog = log(3), sdlog = log(3)^(1/1.645))
+AF_pod_noael_cont <- rlnorm(10000,meanlog = log(1/3), sdlog=log(4.7^(1/1.645)))
+
+bmd.heptachlor <- 0.03/(AF_loael_noael_3*AF_pod_noael_cont)
+cat("bmd.heptachlor",quantile(bmd.heptachlor,prob=c(0.5,0.05,0.95)),"\n")
+
+#AF: WHO body size scaling
+#human: 70 kg
+#Subchronic female SD rat: F: 0.204 kg
+#P50 = (70/0.204)^0.3 = 5.763
+#P95/P50 = (70/0.204)^0.04 = 1.263
+AF_interBS_sub.sdrat.f <- rlnorm(10000,meanlog = log(5.763), sdlog=log(1.263^(1/1.645)))
+
+hed.heptachlor <- 0.03/(AF_loael_noael_3*AF_pod_noael_cont*AF_interBS_sub.sdrat.f)
+cat("hed.heptachlor",quantile(hed.heptachlor,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##Heptachlor epoxide
+
+```{r heptachlorepoxide}
+#LEL: 0.0125 mg/kg/day
+#AF LOAEL to NOAEL: 10
+AF_loael_noael <- rlnorm(10000, meanlog = log(10), sdlog = log(3)^(1/1.645))
+AF_pod_noael_cont <- rlnorm(10000,meanlog = log(1/3), sdlog=log(4.7^(1/1.645)))
+
+bmd.hepepo <- 0.0125/(AF_loael_noael*AF_pod_noael_cont)
+cat("bmd.hepepo",quantile(bmd.hepepo,prob=c(0.5,0.05,0.95)),"\n")
+
+#AF: WHO body size scaling
+#human: 70 kg
+#beagle dog: male 10.8 kg; female 10.1 kg
+#average animal bw: 10.45 kg
+#P50 = (70/10.45)^0.3 = 1.769
+#P95/P50 = (70/10.45)^0.04 = 1.079
+AF_interBS_dog <- rlnorm(10000,meanlog = log(1.769), sdlog=log(1.079^(1/1.645)))
+
+hed.hepepo <- 0.0125/(AF_loael_noael*AF_pod_noael_cont*AF_interBS_dog)
+cat("hed.hepepo",quantile(hed.hepepo,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##Methoxychlor
+
+```{r methoxychlor}
+#NOEL: 5.01
+AF_pod_noael_deter <- rlnorm(10000,meanlog = log(2/9), sdlog=log(5^(1/1.645)))
+
+bmd.mtc <- 5.01/AF_pod_noael_deter
+cat("bmd.mtc",quantile(bmd.mtc, prob=c(0.5,0.05,0.95)))
+
+#AF: WHO body size scaling
+#human: 70 kg
+#Female New Zealand white rabbit: 3.93 kg
+#P50 = (70/3.93)^0.3 = 2.373
+#P95/P50 = (70/3.93)^0.04 = 1.122
+AF_interBS_rabbit.f <- rlnorm(10000,meanlog = log(2.373), sdlog=log(1.122^(1/1.645)))
+
+hed.mtc <- 5.01/(AF_pod_noael_deter*AF_interBS_rabbit.f)
+cat("hed.mtc",quantile(hed.mtc,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##P,P'-DDT
+```{r DDT}
+#NOEL: 0.05 mg/kg/day
+#Increasing hepatocellular hypertrophy, especially centrilobularly, increased cytoplasmic oxyphilia, and peripheral basophilic cytoplasmic granules (based on H and E paraffin sections)
+AF_pod_noael_deter <- rlnorm(10000,meanlog = log(2/9), sdlog=log(5^(1/1.645)))
+
+bmd.ddt <- 0.05/AF_pod_noael_deter
+cat("bmd.ddt",quantile(bmd.ddt,prob=c(0.5,0.05,0.95)),"\n")
+
+#AF: WHO body size scaling
+#human: 70 kg
+#Sprague-Dawley rat, subchronic: M: 0.18 kg; F: 0.124 kg
+#average: 0.152 kg
+#P50 = (70/0.152)^0.3 = 6.294719
+#P95/P50 = (70/0.152)^0.04 = 1.277998
+AF_interBS_sub.sdrat <- rlnorm(10000,meanlog = log(6.30), sdlog=log(1.28^(1/1.645)))
+
+hed.ddt <- 0.05/(AF_pod_noael_deter*AF_interBS_sub.sdrat)
+cat("hed.ddt",quantile(hed.ddt,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##Parathion
+POD based on human
+
+```{r parathion}
+#NOAEL: 0.064 mg/kg/day
+#Cholinesterase / Decreased cholinesterase activity
+AF_pod_noael_cont <- rlnorm(10000,meanlog = log(1/3), sdlog=log(4.7^(1/1.63)))
+
+bmd.parathion <- 0.064/AF_pod_noael_cont
+cat("bmd.parathion",quantile(bmd.parathion,prob=c(0.5,0.05,0.95)),"\n")
+
+#human
+hed.parathion <- 0.064/AF_pod_noael_cont
+cat("hed.parathion",quantile(hed.parathion,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+##Pentachlorophenol
+
+```{r pentachlorophenol}
+#LOAEL: 1.5
+#AF LOAEL to NOAEL: 3
+AF_loael_noael_3 <- rlnorm(10000, meanlog = log(3), sdlog = log(3)^(1/1.645))
+AF_pod_noael_deter <- rlnorm(10000,meanlog = log(2/9), sdlog=log(5^(1/1.645)))
+
+bmd.pcp <- 1.5/(AF_loael_noael_3*AF_pod_noael_deter)
+cat("bmd.pcp",quantile(bmd.pcp,prob=c(0.5,0.05,0.95)),"\n")
+
+#AF: WHO body size scaling
+#human: 70 kg
+#beagle dog: male 10.8 kg, female 10.1 kg
+#average bw: 10.45
+#P50 = (70/10.45)^0.3 = 1.769272
+#P95/P50 = (70/10.45)^0.04 = 1.079044
+AF_interBS_dog <- rlnorm(10000,meanlog = log(1.77), sdlog=log(1.08^(1/1.645)))
+
+hed.pcp <- 1.5/(AF_loael_noael_3*AF_pod_noael_deter*AF_interBS_dog)
+cat("hed.pcp",quantile(hed.pcp,prob=c(0.5,0.05,0.95)),"\n")
+```
+
+#combine BMD samples in a dataframe
+
+```{r dataframe}
+who_bmd.samp.df <- data.frame(bmd.245tcp, 
+                              bmd.dnoc.cont, bmd.dnoc.deter, 
+                              bmd.aldrin, bmd.azin, 
+                              bmd.chlo, bmd.diaz, bmd.dbp, bmd.dicofol, bmd.diel, 
+                              bmd.disul.cont, bmd.disul.deter,
+                              bmd.endo.cont, bmd.endo.deter, 
+                              bmd.endrin, bmd.ethion, 
+                              bmd.heptachlor, bmd.hepepo, bmd.mtc,
+                              bmd.ddt, bmd.parathion,
+                              bmd.pcp)
+
+#add CAS and make columns to rows
+who_bmd.samp.df.t <- data.frame(t(who_bmd.samp.df))
+
+cas.df <- c("95-95-4",
+            "534-52-1","534-52-1",
+            "309-00-2","86-50-0",
+            "2921-88-2","333-41-5","84-74-2","115-32-2","60-57-1",
+            "298-04-4","298-04-4",
+            "115-29-7","115-29-7",
+            "72-20-8","563-12-2","76-44-8","1024-57-3","72-43-5",
+            "50-29-3","56-38-2",
+            "87-86-5")
+end.df <- c("2,4,5-Trichlorophenol",
+            "4,6-Dinitro-o-cresol continuous endpoint","4,6-Dinitro-o-cresol dichotomous endpoint",
+            "Aldrin","Azinphos-methyl",
+            "Chlorpyrifos","Diazinon","Dibutyl phthalate","Dicofol","Dieldrin",
+            "Disulfoton continous endpoint","Disulfoton dichotomous endpoint",
+            "Endosulfan continous endpoint","Endosulfan dichotomous endpoint",
+            "Endrin","Ethion","Heptachlor","Heptachlor epoxide","Methoxychlor","p,p'-DDT","Parathion","Pentachlorophenol")
+
+who_bmd.samp.t.cas <- cbind(who_bmd.samp.df.t, cas.df, end.df)
+colnames(who_bmd.samp.t.cas)[10001:10002] <- c("CAS","endpoint")
+
+write.csv(who_bmd.samp.t.cas, file="WHO bmd samples CAS by row.csv", row.names = FALSE)
+```
+
+#BMD quantile
+
+```{r quantile}
+who.bmd.quan <- as.data.frame(t(apply(who_bmd.samp.df, 2, quantile, probs=c(0.5, 0.05, 0.95))))
+who.bmd.quan.df <- cbind(who.bmd.quan, end.df, cas.df)
+colnames(who.bmd.quan.df)[4:5] <- c("endpoint","CAS")
+write.csv(who.bmd.quan.df, file="WHO BMD quantile.csv", row.names = FALSE)
+```
+
+#combine HED samples in a dataframe
+
+```{r dataframe}
+who_hed.samp.df <- data.frame(hed.245tcp, 
+                              hed.dnoc.cont, hed.dnoc.deter, 
+                              hed.aldrin, hed.azin, 
+                              hed.chlo, hed.diaz, hed.dbp, hed.dicofol, hed.diel, 
+                              hed.disul.cont, hed.disul.deter,
+                              hed.endo.cont, hed.endo.deter, 
+                              hed.endrin, hed.ethion, 
+                              hed.heptachlor, hed.hepepo, hed.mtc,
+                              hed.ddt, hed.parathion,
+                              hed.pcp)
+
+#add CAS and make columns to rows
+who_hed.samp.df.t <- data.frame(t(who_hed.samp.df))
+who_hed.samp.t.cas <- cbind(who_hed.samp.df.t, cas.df, end.df)
+colnames(who_hed.samp.t.cas)[10001:10002] <- c("CAS","endpoint")
+
+write.csv(who_hed.samp.t.cas, file="WHO hed samples CAS by row.csv", row.names = FALSE)
+```

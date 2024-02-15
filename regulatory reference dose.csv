@@ -1,0 +1,20 @@
+﻿Chemical,CAS,origPOD,POD,PODadj,Ufa,HED,RfD,Species
+"2,4,5-Trichlorophenol",95-95-4,NOEL,100,100,100,1,0.1,Rat
+"4,6-Dinitro-o-cresol",534-52-1,LOAEL,0.8,0.08,100,0.008,0.00008,Human
+Aldrin,309-00-2,LOAEL,0.025,0.0025,100,0.00025,0.00003,Rat
+Azinphos-methyl,86-50-0,BMDL,0.3,0.3,10,0.03,0.003,Dog
+Chlorpyrifos,2921-88-2,NOAEL,0.1,0.1,10,0.01,0.001,Sherman rats
+"p,p'-DDT",50-29-3,NOEL,0.05,0.05,10,0.005,0.0005,Sprague-Dawley rats
+Diazinon,333-41-5,NOAEL,0.065,0.065,10,0.0065,0.0007,Sprague-Dawley rats
+Dibutyl phthalate,84-74-2,NOAEL,125,125,30,4.166666667,0.1,Dog
+Dicofol,115-32-2,NOAEL,0.12,0.12,10,0.012,0.0004,"Carworth Farm ""E"" rats"
+Dieldrin,60-57-1,NOAEL,0.005,0.005,10,0.0005,0.00005,Fischer 344 rats
+Disulfoton,298-04-4,LEL,0.04,0.004,100,0.0004,0.00004,Sprague-Dawley rats
+Endosulfan,115-29-7,NOAEL,0.6,0.6,10,0.06,0.006,Dog
+Endrin,72-20-8,NOAEL,0.025,0.025,10,0.0025,0.0003,Human
+Ethion,563-12-2,NOEL,0.05,0.05,10,0.005,0.0005,Sprague Dawley rats
+Heptachlor,76-44-8,LOAEL,0.03,0.01,30,0.001,0.0001,Beagle dog
+Heptachlor epoxide,1024-57-3,LEL,0.0125,0.00125,100,0.000125,0.000013,New Zealand White rabbits
+Methoxychlor,72-43-5,NOEL,5.01,5.01,10,0.501,0.005,Rat
+Parathion,56-38-2,NOAEL,0.064,0.064,1,0.064,0.006,Human
+Pentachlorophenol,87-86-5,LOAEL,1.5,0.5,30,0.05,0.005,Beagle dogs
