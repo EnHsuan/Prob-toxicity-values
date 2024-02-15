@@ -86,3 +86,32 @@
      - WHO BMD quantile.csv
    - Script: Differences in HDMI BMD UFh.R
    - Output file: Differences in HDMI BMD UFh bar plot.pdf (Manuscript Figure 3)
+3) Degree of uncertainty between two approaches
+   - Input files:
+      - BBMD quantile.csv
+      - WHO BMD quantile.csv
+      - WHO approximate HDMI quantile.csv
+      - HDMI quantile.csv
+   - Script: Degree of uncertainty.R
+   - Output file: Degree of uncertainty uncertainty violin plot.pdf (Manuscript Figure 4)
+4) Compare chemical-specific toxicity values with exposure data
+   - Input files:
+      - bimonitoring data.csv
+      - BEMI blood.csv
+      - BEMI urine.csv
+      - regulatory reference dose.csv
+      - HDMI.csv
+      - Expocast distribution by row.csv
+   - Script: Toxicity values with exposure data ggridges.R
+   - Output files:
+      - the most sensitive HDMI and BEMI in blood and urine ggridges plot.pdf (Manuscript Figure 5)
+      - all endpoints HDMI and BEMI in blood and urine ggridges plot.pdf (Supplementary Fig. S2)
+5) Estimate Margin of Exposure (MOE)
+   - Input files:
+      - expocast upper bound.csv
+      - WHO approximate HDMI quantile.csv
+      - HDMI quantile.csv
+      - bimonitoring data.csv
+      - BEMI blood quantile.csv
+   - Script: Margin of exposure.R
+   - Output file: MOE plot.pdf (Manuscript Figure 6)
