@@ -24,6 +24,7 @@ hd50.df <- hd50 %>% arrange(CAS)
 #HD50.data.all <- c()
 BEMI_b.data.all <- c()
 BEMI_u.data.all <- c()
+intra.data.all <- c()
 HDMI.data.all <- c()
 zrand <- rnorm(n=10000) #variability
 for (i in 1:19){
@@ -53,6 +54,7 @@ for (i in 1:19){
     #HD50.data <- data.frame(CAS = cas, endpoint = end)
     BEMI.blood.data <- data.frame(CAS = cas, endpoint = end)
     BEMI.urine.data <- data.frame(CAS = cas, endpoint = end)
+    intra.data <- data.frame(CAS = cas, endpoint = end)
     HDMI.data <- data.frame(CAS = cas, endpoint = end)
     
     #HD50=HED/AF_inter_TD
@@ -80,6 +82,8 @@ for (i in 1:19){
       HCss.50.temp <- HCss.50[l] #take one sample from HCss.50
       td.rand <- td_h[l]^zrand #take one sample from td_h and run z score to generate variability
       hdmi.rand <- HCss.50.temp/(css*td.rand) #variability combining human TK and TD
+      intra.temp <- quantile(css*td.rand, prob=0.99, na.rm=TRUE)/quantile(css*td.rand, prob=0.5, na.rm=TRUE) #TKTDVF01
+      intra.data[1, 2+l] <- intra.temp
       hdmi.temp <- quantile(hdmi.rand, prob=0.01, na.rm=TRUE) #I=1%
       HDMI.data[1, 2+l] <- hdmi.temp
     } 
@@ -91,6 +95,7 @@ for (i in 1:19){
       #HD50.data <- data.frame(CAS = cas, endpoint = end)
       BEMI.blood.data <- data.frame(CAS = cas, endpoint = end)
       BEMI.urine.data <- data.frame(CAS = cas, endpoint = end)
+      intra.data <- data.frame(CAS = cas, endpoint = end)
       HDMI.data <- data.frame(CAS = cas, endpoint = end)
       HCss.50 <- matrix(nrow = num.end, ncol = 10000)
       
@@ -122,11 +127,16 @@ for (i in 1:19){
         #HDMI (unit: mg/kg/day)
         HCss.50.temp <- matrix(nrow = num.end, ncol = 1)
         hdmi.rand <- matrix(nrow = num.end, ncol = 10000)
+        intra.temp <- matrix(nrow = num.end, ncol = 1)
         hdmi.temp <- matrix(nrow = num.end, ncol = 1)
         for (l in 1:10000){
           HCss.50.temp <- HCss.50[j,l] #take one sample from HCss.50
           td.rand <- td_h[l]^zrand #take one sample from td_h and run z score to generate variability
           hdmi.rand[j,] <- HCss.50.temp/(css*td.rand) #variability combining human TK and TD
+          
+          intra.temp[j,] <- quantile(css*td.rand, prob=0.99, na.rm=TRUE)/quantile(css*td.rand, prob=0.5, na.rm=TRUE)
+          intra.data[j, 2+l] <- intra.temp[j,]
+          
           hdmi.temp[j,] <- quantile(hdmi.rand[j,], prob=0.01, na.rm=TRUE) #I=1%
           HDMI.data[j, 2+l] <- hdmi.temp[j,]
         }
@@ -140,11 +150,21 @@ for (i in 1:19){
   BEMI_u.data.all <- rbind(BEMI_u.data.all, BEMI.urine.data)
   HDMI.data.all <- rbind(HDMI.data.all, HDMI.data)
   
+  intra.data.all <- rbind(intra.data.all, intra.data)
+  
 }
 
 write.csv(BEMI_b.data.all, file="BEMI blood.csv", row.names = FALSE)
 write.csv(BEMI_u.data.all, file="BEMI urine.csv", row.names = FALSE)
 write.csv(HDMI.data.all, file="HDMI.csv", row.names = FALSE)
+write.csv(intra.data.all, file="TKTDVF01.csv", row.names = FALSE)
+
+HD50.data.all <- data.frame(hd50.df[,10001:10002],hd50.df[,1:10000])
+write.csv(HD50.data.all, file="HD50.csv", row.names = FALSE)
+
+HD50.quan <- as.data.frame(t(apply(HD50.data.all[3:10002], 1, quantile, probs=c(0.5, 0.05, 0.95))))
+HD50.quan.df <- cbind(HD50.data.all[,1:2], HD50.quan)
+write.csv(HD50.quan.df, file="HD50 quantile.csv", row.names = FALSE)
 
 BEMI_b.quan <- as.data.frame(t(apply(BEMI_b.data.all[3:10002], 1, quantile, probs=c(0.5, 0.05, 0.95))))
 BEMI_b.quan.df <- cbind(BEMI_b.data.all[,1:2], BEMI_b.quan)
@@ -157,3 +177,7 @@ write.csv(BEMI_u.quan.df, file="BEMI urine quantile.csv", row.names = FALSE)
 HDMI.quan <- as.data.frame(t(apply(HDMI.data.all[3:10002], 1, quantile, probs=c(0.5, 0.05, 0.95))))
 HDMI.quan.df <- cbind(HDMI.data.all[,1:2], HDMI.quan)
 write.csv(HDMI.quan.df, file="HDMI quantile.csv", row.names = FALSE)
+
+intra.quan <- as.data.frame(t(apply(intra.data.all[3:10002], 1, quantile, probs=c(0.5, 0.05, 0.95))))
+intra.quan.df <- cbind(intra.data.all[,1:2], intra.quan)
+write.csv(intra.quan.df, file="TKTDVF01 quantile.csv", row.names = FALSE)

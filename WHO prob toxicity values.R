@@ -63,6 +63,14 @@ for (i in 1:22){
 
 write.csv(HDMI.data.all, file="WHO approximate HDMI.csv", row.names = FALSE)
 
+HD50.data.all <- data.frame(who_hd50.df[,10001:10002],who_hd50.df[,1:10000])
+write.csv(HD50.data.all, file="WHO approximate HD50.csv", row.names = FALSE)
+
 HDMI.quan <- as.data.frame(t(apply(HDMI.data.all[3:10002], 1, quantile, probs=c(0.5, 0.05, 0.95))))
 HDMI.quan.df <- cbind(HDMI.data.all[,1:2], HDMI.quan)
 write.csv(HDMI.quan.df, file="WHO approximate HDMI quantile.csv", row.names = FALSE)
+
+AF_intra.df <- data.frame(t(AF_intra))
+write.csv(AF_intra.df, file="WHO approximate intraspecies factor.csv", row.names = FALSE)
+AF_intra.quan.df <- as.data.frame(t(apply(AF_intra.df, 1, quantile, probs=c(0.5, 0.05, 0.95))))
+write.csv(AF_intra.quan.df, file="WHO approximate intraspecies factor quantile.csv", row.names = FALSE)
