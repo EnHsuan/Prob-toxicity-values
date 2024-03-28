@@ -194,6 +194,18 @@ bmd.degree.box <- ggplot(data=bmd.degree, aes(x=degree, y=name, color=name))+
   annotation_logticks(sides="b")
 print(bmd.degree.box)
 
+##check log variance of BMD
+#log variance is proportional to (log10(95th/5th))^2
+who.bmd.log10ratio <- data.frame(chemical=who.bmd.quan.min$Chemical, CAS=who.bmd.quan.min$CAS,
+                                 uncertainty=who.bmd.quan.min$degree, log10ratio=log10(who.bmd.quan.min$degree))
+bmd.log10ratio <- data.frame(chemical=bmd.quan.min$Chemical, CAS=bmd.quan.min$CAS,
+                             uncertainty=bmd.quan.min$degree, log10ratio=log10(bmd.quan.min$degree))
+#fold reduction in log variance
+who.bmd.median <- median(who.bmd.log10ratio$log10ratio)
+bmd.median <- median(bmd.log10ratio$log10ratio)
+bmdfold <- who.bmd.median^2/bmd.median^2
+#0.97 fold reduction in log variance
+
 #combine plots
 #BMD/Reg POD
 norm.bmd.plot <- ggarrange(bmd.sen.plot, bmd.sen.total, nrow=2, heights = c(0.75,0.25), align="v")
@@ -208,14 +220,14 @@ ggsave(bmd.bind, file="BMD plot.pdf", width = 24, height = 12, path = "HDMI plot
 ###-------------------------------------------------------------------------------------------------
 #generate csv file for Prism
 #A panel normalized distributions
-bmd.nor.sen.end.df$Chemical <- factor(bmd.nor.sen.end.df$Chemical, levels = rev(yaxis_order))
+bmd.nor.sen.end.df$Chemical <- factor(bmd.nor.sen.end.df$Chemical, levels = yaxis_order)
 bmd.nor.sen.end.df_sort <- bmd.nor.sen.end.df[order(bmd.nor.sen.end.df$Chemical),]
 bmd.nor.sen.end.df.t <- data.frame(t(bmd.nor.sen.end.df_sort[,3:10003]))
 colnames(bmd.nor.sen.end.df.t) <- bmd.nor.sen.end.df.t[1,]
 bmd.data <- bmd.nor.sen.end.df.t[-1,]
 write.csv(bmd.data, file="prism file/Fig 2 (A) BMD normalized data.csv", row.names = FALSE)
 
-who.bmd.nor.sen.end.df$Chemical <- factor(who.bmd.nor.sen.end.df$Chemical, levels = rev(yaxis_order))
+who.bmd.nor.sen.end.df$Chemical <- factor(who.bmd.nor.sen.end.df$Chemical, levels = yaxis_order)
 who.bmd.nor.sen.end.df_sort <- who.bmd.nor.sen.end.df[order(who.bmd.nor.sen.end.df$Chemical),]
 who.bmd.nor.sen.end.df.t <- data.frame(t(who.bmd.nor.sen.end.df_sort[,4:10004]))
 colnames(who.bmd.nor.sen.end.df.t) <- who.bmd.nor.sen.end.df.t[1,]
@@ -227,18 +239,18 @@ bmd.nor.5th$name <- "BBMD or WHO/IPCS BMD"
 who.bmd.nor.5th <- who.bmd.nor.sen.end.df[,c(4, 10006)]
 who.bmd.nor.5th$name <- "WHO/IPCS BMD"
 bmd.5th.bind <- merge(bmd.nor.5th, who.bmd.nor.5th, by="Chemical")
-bmd.5th.bind$Chemical <- factor(bmd.5th.bind$Chemical, levels = rev(yaxis_order))
+bmd.5th.bind$Chemical <- factor(bmd.5th.bind$Chemical, levels = yaxis_order)
 bmd.5th.bind_sort <- bmd.5th.bind[order(bmd.5th.bind$Chemical),]
-write.csv(bmd.5th.bind_sort, file="prism file/Fig 2 (A) BMD normalized 5th.csv", row.names = FALSE)
+write.csv(bmd.5th.bind_sort, file="prism file/Fig 2 (D) BMD normalized 5th.csv", row.names = FALSE)
 
 #B panel for differences
 bmd.diff.df <- bmd.df[,c(10,11,14)]
-bmd.diff.df$Chemical <- factor(bmd.diff.df$Chemical, levels = rev(yaxis_order))
+bmd.diff.df$Chemical <- factor(bmd.diff.df$Chemical, levels = yaxis_order)
 bmd.diff.df_sort <- bmd.diff.df[order(bmd.diff.df$Chemical),]
-write.csv(bmd.diff.df_sort, file="prism file/Fig 2 (B) BMD differences.csv", row.names = FALSE)
+write.csv(bmd.diff.df_sort, file="prism file/Fig 2 (B)(E) BMD differences.csv", row.names = FALSE)
 
 #C panel for uncertainty degree
 bmd.degree.df <- merge(bmd.degree[1:19,6:8], bmd.degree[20:38,6:8], by="Chemical")
-bmd.degree.df$Chemical <- factor(bmd.degree.df$Chemical, levels = rev(yaxis_order))
+bmd.degree.df$Chemical <- factor(bmd.degree.df$Chemical, levels = yaxis_order)
 bmd.degree.df_sort <- bmd.degree.df[order(bmd.degree.df$Chemical),]
-write.csv(bmd.degree.df_sort, file="prism file/Fig 2 (C) BMD uncertainty degree.csv", row.names = FALSE)
+write.csv(bmd.degree.df_sort, file="prism file/Fig 2 (C)(F) BMD uncertainty degree.csv", row.names = FALSE)

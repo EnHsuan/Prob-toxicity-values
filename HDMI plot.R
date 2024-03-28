@@ -144,6 +144,14 @@ hdmi.diff.box <- ggplot(hdmi.m, aes(x=value, y=variable))+
   xlab(bquote(Delta~log[10]~HD[M]^I))
 print(hdmi.diff.box)
 
+#check which one contributes more to the shift in the overall distribution
+#use absolute value to compare the difference
+abs.df <- merge(bmd.df[,c(1,10,14)], ufh.df[,c(6,13)], by="Chemical")
+abs.df$abs.bmd <- abs(abs.df$log10.bmd_whobmd)
+abs.df$abs.ufh <- abs(abs.df$log10.cs_who)
+abs.df$diff <- abs.df$abs.bmd-abs.df$abs.ufh
+#BMD is smaller:  15 chemicals (total 19 chemicals)
+
 #degree of uncertainty
 chem <- read.csv("regulatory reference dose.csv")[,1:2]
 who.hdmi.quan <- read.csv("WHO approximate HDMI quantile.csv")
@@ -201,6 +209,18 @@ hdmi.degree.box <- ggplot(data=hdmi.degree, aes(x=degree, y=name, color=name))+
   annotation_logticks(sides="b")
 print(hdmi.degree.box)
 
+##check log variance of HDMI
+#log variance is proportional to (log10(95th/5th))^2
+who.hdmi.log10ratio <- data.frame(chemical=who.hdmi.quan.min$Chemical, CAS=who.hdmi.quan.min$CAS,
+                                  uncertainty=who.hdmi.quan.min$degree, log10ratio=log10(who.hdmi.quan.min$degree))
+cs.hdmi.log10ratio <- data.frame(chemical=cs.hdmi.quan.min$Chemical, CAS=cs.hdmi.quan.min$CAS,
+                                 uncertainty=cs.hdmi.quan.min$degree, log10ratio=log10(cs.hdmi.quan.min$degree))
+#fold reduction in log variance
+who.median <- median(who.hdmi.log10ratio$log10ratio)
+cs.median <- median(cs.hdmi.log10ratio$log10ratio)
+hdmifold <- who.median^2/cs.median^2
+#1.38 fold reduction in log variance
+
 #combine plots
 #HDMI/Reg RfD
 norm.hdmi.plot <- ggarrange(hdmi.sen.plot, hdmi.sen.total, nrow=2, heights = c(0.75,0.25), align="v")
@@ -215,14 +235,14 @@ ggsave(hdmi.bind, file="HDMI plot.pdf", width = 24, height = 12, path = "HDMI pl
 ###-------------------------------------------------------------------------------------------------
 #generate csv file for Prism
 #A panel normalized distributions
-hdmi.nor.sen.end.df$Chemical <- factor(hdmi.nor.sen.end.df$Chemical, levels = rev(yaxis_order))
+hdmi.nor.sen.end.df$Chemical <- factor(hdmi.nor.sen.end.df$Chemical, levels = yaxis_order)
 hdmi.nor.sen.end.df_sort <- hdmi.nor.sen.end.df[order(hdmi.nor.sen.end.df$Chemical),]
 hdmi.nor.sen.end.df.t <- data.frame(t(hdmi.nor.sen.end.df_sort[,3:10003]))
 colnames(hdmi.nor.sen.end.df.t) <- hdmi.nor.sen.end.df.t[1,]
 hdmi.data <- hdmi.nor.sen.end.df.t[-1,]
 write.csv(hdmi.data, file="prism file/Fig 4 (A) chemical-specific HDMI normalized data.csv", row.names = FALSE)
 
-who.hdmi.nor.sen.end.df$Chemical <- factor(who.hdmi.nor.sen.end.df$Chemical, levels = rev(yaxis_order))
+who.hdmi.nor.sen.end.df$Chemical <- factor(who.hdmi.nor.sen.end.df$Chemical, levels = yaxis_order)
 who.hdmi.nor.sen.end.df_sort <- who.hdmi.nor.sen.end.df[order(who.hdmi.nor.sen.end.df$Chemical),]
 who.hdmi.nor.sen.end.df.t <- data.frame(t(who.hdmi.nor.sen.end.df_sort[,4:10004]))
 colnames(who.hdmi.nor.sen.end.df.t) <- who.hdmi.nor.sen.end.df.t[1,]
@@ -234,18 +254,18 @@ hdmi.nor.5th$name <- "Chemical-specific intra"
 who.hdmi.nor.5th <- who.hdmi.nor.sen.end.df[,c(4, 10006)]
 who.hdmi.nor.5th$name <- "WHO/IPCS intra"
 hdmi.5th.bind <- merge(hdmi.nor.5th, who.hdmi.nor.5th, by="Chemical")
-hdmi.5th.bind$Chemical <- factor(hdmi.5th.bind$Chemical, levels = rev(yaxis_order))
+hdmi.5th.bind$Chemical <- factor(hdmi.5th.bind$Chemical, levels = yaxis_order)
 hdmi.5th.bind_sort <- hdmi.5th.bind[order(hdmi.5th.bind$Chemical),]
-write.csv(hdmi.5th.bind_sort, file="prism file/Fig 4 (A) HDMI normalized 5th.csv", row.names = FALSE)
+write.csv(hdmi.5th.bind_sort, file="prism file/Fig 4 (D) HDMI normalized 5th.csv", row.names = FALSE)
 
 #B panel for differences
 hdmi.diff.df <- hdmi.df[,c(10,11,14)]
-hdmi.diff.df$Chemical <- factor(hdmi.diff.df$Chemical, levels = rev(yaxis_order))
+hdmi.diff.df$Chemical <- factor(hdmi.diff.df$Chemical, levels = yaxis_order)
 hdmi.diff.df_sort <- hdmi.diff.df[order(hdmi.diff.df$Chemical),]
-write.csv(hdmi.diff.df_sort, file="prism file/Fig 4 (B) HDMI differences.csv", row.names = FALSE)
+write.csv(hdmi.diff.df_sort, file="prism file/Fig 4 (B)(E) HDMI differences.csv", row.names = FALSE)
 
 #C panel for uncertainty degree
 hdmi.degree.df <- merge(hdmi.degree[1:19,6:8], hdmi.degree[20:38,6:8], by="Chemical")
-hdmi.degree.df$Chemical <- factor(hdmi.degree.df$Chemical, levels = rev(yaxis_order))
+hdmi.degree.df$Chemical <- factor(hdmi.degree.df$Chemical, levels = yaxis_order)
 hdmi.degree.df_sort <- hdmi.degree.df[order(hdmi.degree.df$Chemical),]
-write.csv(hdmi.degree.df_sort, file="prism file/Fig 4 (C) HDMI uncertainty degree.csv", row.names = FALSE)
+write.csv(hdmi.degree.df_sort, file="prism file/Fig 4 (C)(F) HDMI uncertainty degree.csv", row.names = FALSE)

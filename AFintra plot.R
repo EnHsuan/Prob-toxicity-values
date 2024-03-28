@@ -108,7 +108,7 @@ ufh.df$log10.cs_who <- ufh.df$log10.csufh50-ufh.df$log10.whoufh50
 ufh.df$Chemical <- factor(ufh.df$Chemical, levels = yaxis_order)
 
 ufh.diff <- ggplot(ufh.df, aes(x=log10.cs_who, y=Chemical))+
-  geom_bar(aes(fill = BBMD == BBMD), stat="identity")+
+  geom_bar(stat="identity")+
   theme_bw()+
   theme(#axis.title.x = element_blank(), #axis.text.x = element_blank(), 
     axis.title.y = element_blank(), #axis.text.y = element_blank(), 
@@ -117,7 +117,7 @@ ufh.diff <- ggplot(ufh.df, aes(x=log10.cs_who, y=Chemical))+
     panel.grid.major = element_blank(),panel.grid.minor = element_blank())+
   geom_vline(xintercept = 0)+
   xlim(-2,2)+
-  scale_fill_manual(breaks = c(F, T), values=c("gray", "gray3"), labels=c("Use WHO/IPCS BMD","Use BBMD"))+
+  #scale_fill_manual(breaks = c(F, T), values=c("gray", "gray3"), labels=c("Use WHO/IPCS BMD","Use BBMD"))+
   xlab(bquote(Delta~log[10]~AF[intra]))
 print(ufh.diff)
 
@@ -195,6 +195,18 @@ ufh.degree.box <- ggplot(data=ufh.degree, aes(x=degree, y=name, color=name))+
   annotation_logticks(sides="b")
 print(ufh.degree.box)
 
+##check log variance of AFintra
+#log variance is proportional to (log10(95th/5th))^2
+who.ufh.log10ratio <- data.frame(chemical=who.ufh.quan.chem$Chemical, CAS=who.ufh.quan.chem$CAS,
+                                 uncertainty=who.ufh.quan.chem$degree, log10ratio=log10(who.ufh.quan.chem$degree))
+ufh.log10ratio <- data.frame(chemical=ufh.quan.chem$Chemical, CAS=ufh.quan.chem$CAS,
+                             uncertainty=ufh.quan.chem$degree, log10ratio=log10(ufh.quan.chem$degree))
+#fold reduction in log variance
+who.ufh.median <- median(who.ufh.log10ratio$log10ratio)
+ufh.median <- median(ufh.log10ratio$log10ratio)
+ufhfold <- who.ufh.median^2/ufh.median^2
+#13.54 fold reduction in log variance
+
 #combine plots
 #UFh/10
 norm.ufh.plot <- ggarrange(ufh.sen.plot, ufh.sen.total, nrow=2, heights = c(0.75,0.25), align="v")
@@ -209,14 +221,14 @@ ggsave(ufh.bind, file="Intraspecies uncertainty plot.pdf", width = 24, height = 
 ###-------------------------------------------------------------------------------------------------
 #generate csv file for Prism
 #A panel normalized distributions
-ufh.nor.sen.df$Chemical <- factor(ufh.nor.sen.df$Chemical, levels = rev(yaxis_order))
+ufh.nor.sen.df$Chemical <- factor(ufh.nor.sen.df$Chemical, levels = yaxis_order)
 ufh.nor.sen.df_sort <- ufh.nor.sen.df[order(ufh.nor.sen.df$Chemical),]
 ufh.nor.sen.df.t <- data.frame(t(ufh.nor.sen.df_sort[,3:10003]))
 colnames(ufh.nor.sen.df.t) <- ufh.nor.sen.df.t[1,]
 ufh.data <- ufh.nor.sen.df.t[-1,]
 write.csv(ufh.data, file="prism file/Fig 3 (A) chemical-specific AFintra normalized data.csv", row.names = FALSE)
 
-who.ufh.nor.df$Chemical <- factor(who.ufh.nor.df$Chemical, levels = rev(yaxis_order))
+who.ufh.nor.df$Chemical <- factor(who.ufh.nor.df$Chemical, levels = yaxis_order)
 who.ufh.nor.df_sort <- who.ufh.nor.df[order(who.ufh.nor.df$Chemical),]
 who.ufh.nor.df.t <- data.frame(t(who.ufh.nor.df_sort[,c(1,3:10002)]))
 colnames(who.ufh.nor.df.t) <- who.ufh.nor.df.t[1,]
@@ -228,18 +240,18 @@ ufh.nor.95th$name <- "Chemical-specific intra"
 who.ufh.nor.95th <- who.ufh.nor.df[,c(1, 10003)]
 who.ufh.nor.95th$name <- "WHO/IPCS intra"
 ufh.95th.bind <- merge(ufh.nor.95th, who.ufh.nor.95th, by="Chemical")
-ufh.95th.bind$Chemical <- factor(ufh.95th.bind$Chemical, levels = rev(yaxis_order))
+ufh.95th.bind$Chemical <- factor(ufh.95th.bind$Chemical, levels = yaxis_order)
 ufh.95th.bind_sort <- ufh.95th.bind[order(ufh.95th.bind$Chemical),]
-write.csv(ufh.95th.bind_sort, file="prism file/Fig 3 (A) AFintra normalized 95th.csv", row.names = FALSE)
+write.csv(ufh.95th.bind_sort, file="prism file/Fig 3 (D) AFintra normalized 95th.csv", row.names = FALSE)
 
 #B panel for differences
 ufh.diff.df <- ufh.df[,c(6,10,13)]
-ufh.diff.df$Chemical <- factor(ufh.diff.df$Chemical, levels = rev(yaxis_order))
+ufh.diff.df$Chemical <- factor(ufh.diff.df$Chemical, levels = yaxis_order)
 ufh.diff.df_sort <- ufh.diff.df[order(ufh.diff.df$Chemical),]
-write.csv(ufh.diff.df_sort, file="prism file/Fig 3 (B) AFintra differences.csv", row.names = FALSE)
+write.csv(ufh.diff.df_sort, file="prism file/Fig 3 (B)(E) AFintra differences.csv", row.names = FALSE)
 
 #C panel for uncertainty degree
 ufh.degree.df <- merge(ufh.degree[1:19,c(4,6,7)], ufh.degree[20:38,c(4,6,7)], by="Chemical")
-ufh.degree.df$Chemical <- factor(ufh.degree.df$Chemical, levels = rev(yaxis_order))
+ufh.degree.df$Chemical <- factor(ufh.degree.df$Chemical, levels = yaxis_order)
 ufh.degree.df_sort <- ufh.degree.df[order(ufh.degree.df$Chemical),]
-write.csv(ufh.degree.df_sort, file="prism file/Fig 3 (C) AFintra uncertainty degree.csv", row.names = FALSE)
+write.csv(ufh.degree.df_sort, file="prism file/Fig 3 (C)(F) AFintra uncertainty degree.csv", row.names = FALSE)

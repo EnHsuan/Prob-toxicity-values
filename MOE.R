@@ -99,7 +99,8 @@ ggsave(moe.plot, file="MOE plot (Expocast and biomonitoring).pdf", width = 12, h
 ###-------------------------------------------------------------------------------------------------
 #generate csv file for Prism
 hdmi.expo.df <- merge(hdmi.expo[1:19, c(4,5,7)], hdmi.expo[20:38, c(4,5,7)], by="Chemical")
-hdmi.expo.df_sort <- hdmi.expo.df[order(hdmi.expo.df$MOE.y, decreasing = TRUE),]
+hdmi.expo.df_sort <- hdmi.expo.df[order(hdmi.expo.df$MOE.y, decreasing = FALSE),]
 write.csv(hdmi.expo.df_sort, file="prism file/Fig 5 (A) MOE by Expocast.csv", row.names = FALSE)
 
+bioexpo.moe_sort <- bioexpo.moe[order(bioexpo.moe$Chemical, decreasing = FALSE),]
 write.csv(bioexpo.moe, file="prism file/Fig 5 (B) MOE by Expocast and bio data.csv", row.names = FALSE)

@@ -56,9 +56,9 @@ library(ggplot2)
 library(ggpubr)
 
 css.bio_b.plot <- ggplot()+
-  geom_point(data=css.bind[5:12,], aes(x=value, y=Chemical, shape=name, color=name), size=2)+
+  geom_point(data=css.bind[5:12,], aes(x=value, y=Chemical, shape=name), size=2)+
   geom_segment(aes(x=css.50$value, y=css.50$Chemical, xend=css.95$value, yend=css.95$Chemical), size=0.2)+
-  geom_point(data=css.bind[1:4,], aes(x=value, y=Chemical, shape=name, color=name), size=2)+
+  geom_point(data=css.bind[1:4,], aes(x=value, y=Chemical, shape=name), size=2)+
   scale_x_log10(limits=c(1e-11, 1e-1),
                 breaks = scales::trans_breaks("log10", function(x) 10^x),
                 labels = scales::trans_format("log10", scales::math_format(10^.x)))+
@@ -67,20 +67,16 @@ css.bio_b.plot <- ggplot()+
   theme(axis.title.y = element_blank(), legend.title = element_blank(), 
         panel.grid.major = element_blank(),panel.grid.minor = element_blank())+
   annotation_logticks(sides="b")+
-  scale_color_manual(name="legend",
-                     breaks=c("Css median","Css 95th","Biomonitoring data"),
-                     labels=c(bquote(C[SS]~50^th), bquote(C[SS]~95^th), "Biomonitoring data"),
-                     values=c(`Css median`="#56B4E9",`Css 95th`="#56B4E9",`Biomonitoring data`="#D55E00"))+
   scale_shape_manual(name="legend",
                      breaks=c("Css median","Css 95th","Biomonitoring data"),
-                     labels=c(bquote(C[SS]~50^th), bquote(C[SS]~95^th), "Biomonitoring data"),
-                     values=c(`Css median`=16,`Css 95th`=17,`Biomonitoring data`=17))
+                     labels=c(bquote(C[SS]~50^th), bquote(C[SS]~95^th), "Blood data"),
+                     values=c(`Css median`=16,`Css 95th`=1,`Biomonitoring data`=0))
 print(css.bio_b.plot)
 
 uss.bio_u.plot <- ggplot()+
-  geom_point(data=uss.bind[3:6,], aes(x=value, y=Chemical, shape=name, color=name), size=2)+
+  geom_point(data=uss.bind[3:6,], aes(x=value, y=Chemical, shape=name), size=2)+
   geom_segment(aes(x=uss.50$value, y=uss.50$Chemical, xend=uss.95$value, yend=uss.95$Chemical), size=0.2)+
-  geom_point(data=uss.bind[1:2,], aes(x=value, y=Chemical, shape=name, color=name), size=2)+
+  geom_point(data=uss.bind[1:2,], aes(x=value, y=Chemical, shape=name), size=2)+
   scale_x_log10(limits=c(1e-12, 1e-4),
                 breaks = scales::trans_breaks("log10", function(x) 10^x),
                 labels = scales::trans_format("log10", scales::math_format(10^.x)))+
@@ -89,16 +85,12 @@ uss.bio_u.plot <- ggplot()+
   theme(axis.title.y = element_blank(), legend.title = element_blank(), 
         panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
   annotation_logticks(sides="b")+
-  scale_color_manual(name="legend",
-                     breaks=c("Uss median","Uss 95th","Biomonitoring data"),
-                     labels=c(bquote(U[SS]~50^th), bquote(U[SS]~95^th), "Biomonitoring data"),
-                     values=c(`Uss median`="#56B4E9",`Uss 95th`="#56B4E9",`Biomonitoring data`="#D55E00"))+
   scale_shape_manual(name="legend",
                      breaks=c("Uss median","Uss 95th","Biomonitoring data"),
-                     labels=c(bquote(U[SS]~50^th), bquote(U[SS]~95^th), "Biomonitoring data"),
-                     values=c(`Uss median`=16,`Uss 95th`=17,`Biomonitoring data`=17))
+                     labels=c(bquote(U[SS]~50^th), bquote(U[SS]~95^th), "Urinary data"),
+                     values=c(`Uss median`=16,`Uss 95th`=1,`Biomonitoring data`=2))
 print(uss.bio_u.plot)
 
 expocast.plot <- ggarrange(css.bio_b.plot, uss.bio_u.plot, align="hv", nrow=2, labels = c("A","B"))
 ggsave(expocast.plot, file="Expocast Css and Uss vs biomonitoring data plot.pdf", 
-       width=8, height=10, path="Plot output", scale=0.7)
+       width=8, height=6, path="BEMI plots", scale=0.7)
