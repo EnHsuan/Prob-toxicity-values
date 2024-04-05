@@ -23,7 +23,7 @@
      - All plots in repository: dose-response plots (Supplementary Materials File S3)
 
 ## Step II: Human toxicokinetic (TK) variability
-  ### Generate steady-state concentrations (Css) and TK parameters for urine excretion from httk R package.
+  ### Generate steady-state concentrations (C<sub>ss</sub>) and TK parameters for urine excretion from the population-based _httk_ R package.
   ### Reference: Ring et al. 2017 (PMID: 28628784)
 - Input file: 19 overlapping chemical list.csv
 - **Script: Human TK variability.R**
@@ -40,7 +40,8 @@
 - **Script: Human TD variability.R**
 - Output file: td gsd distribution CAS by row.csv
 
-## Step IV: Deriving toxicity values (HDMI and biomonitoring equivalents in blood and urine)
+## Step IV: Deriving toxicity values 
+  ### HD<sub>M</sub><sup>I</sup> and biomonitoring equivalents (BE<sub>M</sub><sup>I</sup>) in blood and urine
 1) Chemical-specific toxicity values
    - Input files:
      - hed samples CAS by row.csv
@@ -64,48 +65,53 @@
    - Output files:
      - WHO approximate HDMI.csv
      - WHO approximate HDMI quantile.csv
-## Analyses
-1) Compare chemical-specific approach and WHO/IPCS approach in HDMI
-   - Input files:
-     - regulatory reference dose.csv
-     - bmd samples CAS by row.csv
-     - WHO bmd samples CAS by row.csv
-     - HDMI.csv
-     - WHO approximate HDMI.csv
-   - **Script: HDMI ggridges normalization.R**
-   - Output files:
-     - the most sensitive endpoint BBMD HDMI plot.pdf **(Manuscript Figure 2)**
-     - all endpoints normalized BBMD HDMI ggridges plot.pdf **(Supplementary Fig. S1)**
-2) Compare differences in HDMI, BMDs, and human variability values between two approaches
-   - Input files:
-     - regulatory reference dose.csv
-     - BBMD quantile.csv
-     - WHO approximate HDMI quantile.csv
-     - HDMI quantile.csv
-     - BMD quantile.csv
-     - WHO BMD quantile.csv
-   - **Script: Differences in HDMI BMD UFh.R**
-   - Output file: Differences in HDMI BMD UFh bar plot.pdf **(Manuscript Figure 3)**
-3) Degree of uncertainty between two approaches
-   - Input files:
-      - BBMD quantile.csv
-      - WHO BMD quantile.csv
-      - WHO approximate HDMI quantile.csv
-      - HDMI quantile.csv
-   - **Script: Degree of uncertainty.R**
-   - Output file: Degree of uncertainty uncertainty violin plot.pdf **(Manuscript Figure 4)**
-4) Compare chemical-specific toxicity values with exposure data
-   - Input files:
-      - bimonitoring data.csv
-      - BEMI blood.csv
-      - BEMI urine.csv
-      - regulatory reference dose.csv
-      - HDMI.csv
-      - Expocast distribution by row.csv
-   - **Script: Toxicity values with exposure data ggridges.R**
-   - Output files:
-      - the most sensitive HDMI and BEMI in blood and urine ggridges plot.pdf **(Manuscript Figure 5)**
-      - all endpoints HDMI and BEMI in blood and urine ggridges plot.pdf **(Supplementary Fig. S2)**
+## Step V: Analyses
+1) Compare BMD uncertainty distributions between Bayesian model averaging approach and WHO/IPCS approximate approach
+   - **Compare BMD uncertainty distributions, differences of the median BMD, degree of uncertainty**
+     - Input files:
+       - regulatory reference dose.csv
+       - bmd samples CAS by row.csv
+       - WHO bmd samples CAS by row.csv
+       - regulatory reference dose.csv
+       - BBMD quantile.csv
+       - WHO BMD quantile.csv
+     - **Script: BMD plot.R**
+     - Output files:
+       - BMD plot.pdf **(Manuscript Figure 2)**
+2) Compare human variability uncertainty distributions (AF<sub>intra</sub>) between chemical-specific approach and WHO/IPCS approximate approach
+   - **Compare AF<sub>intra</sub> uncertainty distributions, differences of the median AF<sub>intra</sub>, degree of uncertainty**
+     - Input files:
+       - regulatory reference dose.csv
+       - TKTDVF01.csv
+       - WHO approximate intraspecies factor.csv
+       - TKTDVF01 quantile.csv
+       - WHO approximate intraspecies factor quantile.csv
+     - **Script: AFintra plot.R**
+     - Output files:
+       - Intraspecies uncertainty plot.pdf **(Manuscript Figure 3)**
+3) Compare HD<sub>M</sub><sup>I</sup> uncertainty distributions between chemical-specific approach and WHO/IPCS approximate approach
+   - **Compare HD<sub>M</sub><sup>I</sup> uncertainty distributions, differences of the median HD<sub>M</sub><sup>I</sup>, degree of uncertainty**
+     - Input files:
+       - regulatory reference dose.csv
+       - HDMI.csv
+       - WHO approximate HDMI.csv
+       - HDMI quantile.csv
+       - WHO approximate HDMI quantile.csv
+     - **Script: HDMI plot.R**
+     - Output files:
+       - HDMI plot.pdf **(Manuscript Figure 4)**
+4) Compare chemical-specific toxicity values (HD<sub>M</sub><sup>I</sup> and BE<sub>M</sub><sup>I</sup> in blood and urine) with exposure data
+   - **Exposure data from the U.S. EPA ExpoCast prediction, NHANES, Canadian Health Measure Surveys**
+     - Input files:
+       - bimonitoring data.csv
+       - BEMI blood.csv
+       - BEMI urine.csv
+       - regulatory reference dose.csv
+       - HDMI.csv
+       - Expocast distribution by row.csv
+     - **Script: Toxicity values with exposure data.R**
+     - Output files:
+       - Chemical-specific toxicity values with exposure data boxplot.pdf **(Supplementary Fig. S1)**
 5) Estimate Margin of Exposure (MOE)
    - Input files:
       - expocast upper bound.csv
@@ -113,5 +119,14 @@
       - HDMI quantile.csv
       - bimonitoring data.csv
       - BEMI blood quantile.csv
-   - **Script: Margin of exposure.R**
-   - Output file: MOE plot.pdf **(Manuscript Figure 6)**
+      - BEMI urine quantile.csv
+   - **Script: MOE.R**
+   - Output file: MOE plot (Expocast and biomonitoring).pdf **(Manuscript Figure 5)**
+6) Compare biomonitoring data and C<sub>ss</sub>/U<sub>ss</sub>
+   - Intput files:
+     - expocast median and upper bound.csv
+     - Css samples CAS by row.csv
+     - GFRxFub samples CAS by row.csv
+     - bimonitoring data.csv
+   - **Script: Expocast to Css and Uss.R**
+   - Output file: Expocast Css/Uss vs biomonitoring data plot.pdf **(Supplementary Fig. S2)**
