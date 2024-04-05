@@ -101,7 +101,7 @@
      - Output files:
        - HDMI plot.pdf **(Manuscript Figure 4)**
 4) Compare chemical-specific toxicity values (HD<sub>M</sub><sup>I</sup> and BE<sub>M</sub><sup>I</sup> in blood and urine) with exposure data
-   - **Exposure data from the U.S. EPA ExpoCast prediction, NHANES, Canadian Health Measure Surveys**
+   - **Exposure data from the U.S. EPA ExpoCast prediction, NHANES, and Canadian Health Measure Surveys**
      - Input files:
        - bimonitoring data.csv
        - BEMI blood.csv
