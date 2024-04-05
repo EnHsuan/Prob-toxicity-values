@@ -99,9 +99,6 @@ print(hdmi.sen.total)
 #HDMI differences
 #use the most sensitive endpoints
 chem <- read.csv("regulatory reference dose.csv")[,1:2]
-bbmd <- read.csv("BBMD quantile.csv")[,4:5]
-bbmd.chem <- data.frame(CAS=unique(bbmd$CAS))
-bbmd.chem$BBMD <- "BBMD"
 
 who.hdmi.quan <- read.csv("WHO approximate HDMI quantile.csv")
 cs.hdmi.quan <- read.csv("HDMI quantile.csv")
@@ -109,7 +106,6 @@ hdmi.join <- left_join(cs.hdmi.quan, who.hdmi.quan, by="CAS")
 hdmi <- merge(hdmi.join, chem, by="CAS")
 hdmi.35 <- hdmi[-c(2,5,7,17,18,24,25),]
 hdmi.min <- hdmi.35 %>% group_by(CAS) %>% slice(which.min(`X5..x`))
-hdmi.df <- left_join(hdmi.min, bbmd.chem, by="CAS")
 hdmi.df <- hdmi.df %>% arrange(CAS)
 hdmi.df$log10.cshdmi50 <- log10(hdmi.df$X50..x)
 hdmi.df$log10.whohdmi50 <- log10(hdmi.df$X50..y)
@@ -146,6 +142,7 @@ print(hdmi.diff.box)
 
 #check which one contributes more to the shift in the overall distribution
 #use absolute value to compare the difference
+#need to run BMD plot.R and AFintra plot.R
 abs.df <- merge(bmd.df[,c(1,10,14)], ufh.df[,c(6,13)], by="Chemical")
 abs.df$abs.bmd <- abs(abs.df$log10.bmd_whobmd)
 abs.df$abs.ufh <- abs(abs.df$log10.cs_who)

@@ -94,9 +94,6 @@ print(ufh.sen.total)
 
 #UFh differences
 chem <- read.csv("regulatory reference dose.csv")[,1:2]
-bbmd <- read.csv("BBMD quantile.csv")[,4:5]
-bbmd.chem <- data.frame(CAS=unique(bbmd$CAS))
-bbmd.chem$BBMD <- "BBMD"
 
 ufh.quan <- read.csv("TKTDVF01 quantile.csv")
 ufh.quan.chem <- merge(ufh.quan, chem, by="CAS")
@@ -105,7 +102,6 @@ who.ufh.quan <- read.csv("WHO approximate intraspecies factor quantile.csv")
 who.ufh.quan.rep <- as.data.frame(apply(who.ufh.quan, 2, rep, times=19))
 
 ufh.bind <- cbind(ufh.quan.19, who.ufh.quan.rep)
-ufh.df <- left_join(ufh.bind, bbmd.chem, by="CAS")
 ufh.df <- ufh.df %>% arrange(CAS)
 ufh.df$log10.csufh50 <- log10(ufh.df$X50....3)
 ufh.df$log10.whoufh50 <- log10(ufh.df$X50....7)
