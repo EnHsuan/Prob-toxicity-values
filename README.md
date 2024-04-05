@@ -57,7 +57,7 @@
      - BEMI blood quantile.csv
      - BEMI urine quantile.csv
      - HDMI quantile.csv
-2) WHO/IPCS approximate toxicity values
+2) WHO/IPCS approximate HD<sub>M</sub><sup>I</sup>
    - Input files:
      - WHO hed samples CAS by row.csv
      - regulatory reference dose.csv
