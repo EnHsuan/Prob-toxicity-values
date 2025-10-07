@@ -1,0 +1,75 @@
+﻿sex,endpoint,dose,N,mean,SD,chemical
+male,Che,0,4,2.87,0.36,azinphos-methyl
+male,Che,0.2,4,3.01,0.84,azinphos-methyl
+male,Che,0.69,4,2.1,0.45,azinphos-methyl
+male,Che,3.8,4,0.41,0.15,azinphos-methyl
+female,Che,0,4,3.36,1.72,azinphos-methyl
+female,Che,0.16,4,2.87,0.73,azinphos-methyl
+female,Che,0.78,4,2.2,0.5,azinphos-methyl
+female,Che,4.3,4,0.47,0.16,azinphos-methyl
+male,plasma,0,7,0.682222222,0.115555556,chlopyrifos
+male,plasma,0.01,7,0.691111111,0.115555556,chlopyrifos
+male,plasma,0.03,7,0.62,0.195555556,chlopyrifos
+male,plasma,0.1,7,0.691111111,0.164444444,chlopyrifos
+male,plasma,1,7,0.508888889,0.057777778,chlopyrifos
+male,plasma,3,7,0.455555556,0.035555556,chlopyrifos
+female,plasma,0,7,1.87032967,0.896703297,chlopyrifos
+female,plasma,0.01,7,1.448351648,0.501098901,chlopyrifos
+female,plasma,0.03,7,1.237362637,0.334065934,chlopyrifos
+female,plasma,0.1,7,1.465934066,0.545054945,chlopyrifos
+female,plasma,1,7,0.832967033,0.123076923,chlopyrifos
+female,plasma,3,7,0.604395604,0.123076923,chlopyrifos
+male,rbc,0,7,1.716814159,0.300884956,chlopyrifos
+male,rbc,0.01,7,2.017699115,0.424778761,chlopyrifos
+male,rbc,0.03,7,1.867256637,0.230088496,chlopyrifos
+male,rbc,0.1,7,1.672566372,0.345132743,chlopyrifos
+male,rbc,1,7,0.442477876,0.212389381,chlopyrifos
+male,rbc,3,7,0.283185841,0.123893805,chlopyrifos
+female,rbc,0,7,1.548672566,0.150442478,chlopyrifos
+female,rbc,0.01,7,1.663716814,0.389380531,chlopyrifos
+female,rbc,0.03,7,1.637168142,0.238938053,chlopyrifos
+female,rbc,0.1,7,1.663716814,0.159292035,chlopyrifos
+female,rbc,1,7,0.504424779,0.159292035,chlopyrifos
+female,rbc,3,7,0.283185841,0.079646018,chlopyrifos
+male,brain,0,7,12.17182131,2.213058419,chlopyrifos
+male,brain,0.01,7,14.04810997,1.683848797,chlopyrifos
+male,brain,0.03,7,15.15463918,0.865979381,chlopyrifos
+male,brain,0.1,7,12.4604811,0.817869416,chlopyrifos
+male,brain,1,7,10.34364261,1.298969072,chlopyrifos
+male,brain,3,7,7.457044674,0.962199313,chlopyrifos
+female,brain,0,7,13.61245675,1.114186851,chlopyrifos
+female,brain,0.01,7,13.95155709,0.532871972,chlopyrifos
+female,brain,0.03,7,13.2733564,0.726643599,chlopyrifos
+female,brain,0.1,7,13.85467128,0.532871972,chlopyrifos
+female,brain,1,7,12.93425606,1.162629758,chlopyrifos
+female,brain,3,7,7.799307958,1.598615917,chlopyrifos
+male,cortisol,0,6,7.77,1.93,dicofol
+male,cortisol,0.12,6,8.38,1.13,dicofol
+male,cortisol,0.82,6,6.88,1.85,dicofol
+male,cortisol,5.71,6,4.17,1.07,dicofol
+female,cortisol,0,6,9.4,2.36,dicofol
+female,cortisol,0.13,6,8.52,2.48,dicofol
+female,cortisol,0.85,6,7.23,2.5,dicofol
+female,cortisol,5.42,6,4.47,1.28,dicofol
+female,liver weight,0,18,13.54,0.448,dieldrin
+female,liver weight,0.005,13,14.31,0.527,dieldrin
+female,liver weight,0.05,10,15.15,0.601,dieldrin
+female,liver weight,0.5,9,15.12,0.633,dieldrin
+female,liver ratio,0,18,4.08,0.147,dieldrin
+female,liver ratio,0.005,13,4.33,0.173,dieldrin
+female,liver ratio,0.05,10,4.61,0.198,dieldrin
+female,liver ratio,0.5,9,4.84,0.208,dieldrin
+male,bw,0,70,580,124,endosulfan
+male,bw,0.1,70,570,125,endosulfan
+male,bw,0.3,70,531,131,endosulfan
+male,bw,0.6,70,525,115,endosulfan
+male,bw,2.9,70,479,94,endosulfan
+female,bw,0,70,398,105,endosulfan
+female,bw,0.1,70,350,107,endosulfan
+female,bw,0.4,70,414,85,endosulfan
+female,bw,0.7,70,363,92,endosulfan
+female,bw,3.8,70,328,100,endosulfan
+male,igm,0,6,11.602,0.741132865,heptachlor
+male,igm,0.03,6,8.978,0.827311105,heptachlor
+male,igm,0.3,6,10.047,0.430891201,heptachlor
+male,igm,3,6,8.492,0.689425921,heptachlor
